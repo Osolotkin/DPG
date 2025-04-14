@@ -1,0 +1,132 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<definitions name="PasswordService"
+             targetNamespace="http://foo.com/password"
+             xmlns="http://schemas.xmlsoap.org/wsdl/"
+             xmlns:soap="http://schemas.xmlsoap.org/wsdl/soap/"
+             xmlns:xsd="http://www.w3.org/2001/XMLSchema"
+             xmlns:tns="http://foo.com/password">
+
+    <types>
+        <xsd:schema targetNamespace="http://foo.com/password" elementFormDefault="qualified">
+            <xsd:element name="PasswordResetRequest">
+             <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="username" type="xsd:string"/>
+                        <xsd:element name="password" type="xsd:string"/>    
+                     </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="PasswordResetResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                         <xsd:element name="sessionId" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+            
+            <xsd:element name="UserAddRequest">
+                <xsd:complexType>
+                     <xsd:sequence>
+                        <xsd:element name="username" type="xsd:string"/>
+                        <xsd:element name="password" type="xsd:string"/>
+                    </xsd:sequence>
+                 </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UserAddResponse">
+                <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="sessionId" type="xsd:string"/>
+                     </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UserNotFoundFaultDetail">
+                 <xsd:complexType>
+                    <xsd:sequence>
+                         <xsd:element name="message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+
+            <xsd:element name="UserExistsFaultDetail">
+                 <xsd:complexType>
+                    <xsd:sequence>
+                        <xsd:element name="message" type="xsd:string"/>
+                    </xsd:sequence>
+                </xsd:complexType>
+            </xsd:element>
+        </xsd:schema>
+    </types>
+
+    <message name="PasswordResetRequestMsg">
+        <part name="parameters" element="tns:PasswordResetRequest"/>
+    </message>
+     <message name="PasswordResetResponseMsg">
+        <part name="parameters" element="tns:PasswordResetResponse"/>
+    </message>
+    
+    <message name="UserAddRequestMsg">
+        <part name="parameters" element="tns:UserAddRequest"/>
+    </message>
+    <message name="UserAddResponseMsg">
+        <part name="parameters" element="tns:UserAddResponse"/>
+    </message>
+
+    <message name="UserNotFoundFaultMsg">
+        <part name="detail" element="tns:UserNotFoundFaultDetail"/>
+    </message>
+
+    <message name="UserExistsFaultMsg">
+        <part name="detail" element="tns:UserExistsFaultDetail"/>
+    </message>
+
+     <portType name="PasswordServicePortType">
+        <operation name="PasswordReset">
+            <input message="tns:PasswordResetRequestMsg"/>
+            <output message="tns:PasswordResetResponseMsg"/>
+            <fault name="UserNotFoundFault" message="tns:UserNotFoundFaultMsg"/>
+        </operation>
+        <operation name="UserAdd">
+             <input message="tns:UserAddRequestMsg"/>
+             <output message="tns:UserAddResponseMsg"/>
+             <fault name="UserExistsFault" message="tns:UserExistsFaultMsg"/>    
+        </operation>
+    </portType>
+
+    <binding name="PasswordServiceSoapBinding" type="tns:PasswordServicePortType">
+        <soap:binding style="document" transport="http://schemas.xmlsoap.org/soap/http"/>
+        <operation name="PasswordReset">
+            <soap:operation soapAction="http://foo.com/password/PasswordReset"/>
+            <input>
+                <soap:body use="literal"/>
+             </input>
+            <output>
+                <soap:body use="literal"/>
+            </output>
+            <fault name="UserNotFoundFault">
+                <soap:fault name="UserNotFoundFault" use="literal"/>
+            </fault>
+        </operation>
+        <operation name="UserAdd">
+             <soap:operation soapAction="http://foo.com/password/UserAdd"/>
+             <input>
+                 <soap:body use="literal"/>
+             </input>
+             <output>
+                 <soap:body use="literal"/>
+             </output>
+             <fault name="UserExistsFault">
+                 <soap:fault name="UserExistsFault" use="literal"/>
+             </fault>
+        </operation>
+    </binding>
+
+     <service name="PasswordService">
+        <port name="PasswordServicePort" binding="tns:PasswordServiceSoapBinding">
+            <soap:address location="http://localhost:9110/service"/>
+        </port>
+    </service>
+
+</definitions>
