@@ -1,0 +1,2 @@
+CompileFlags:
+  Add: [--include-directory=C:\Program Files (x86)\Microsoft SDKs\MPI\Include]
