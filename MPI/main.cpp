@@ -191,14 +191,14 @@ int main(int argc, char* argv[]) {
     
     }
 
-    MPI_Gatherv(localPrimes,           // Odesílaná lokální data
-                localPrimesCnt,      // Počet odesílaných prvků
-                MPI_INT,          // Typ odesílaných prvků
-                primes,             // Cílový buffer (jen rank 0)
-                localCounts,            // Pole počtů od každého (jen rank 0)
-                displs,                 // Pole posunutí (jen rank 0)
-                MPI_INT,          // Typ přijímaných prvků
-                0,                      // Root proces
+    MPI_Gatherv(localPrimes,
+                localPrimesCnt,
+                MPI_INT,
+                primes,         // target buffer
+                localCounts,    // local answer
+                displs,         // displacement array
+                MPI_INT,
+                0,              // root process
                 MPI_COMM_WORLD
     );
 
